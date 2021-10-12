@@ -1,17 +1,17 @@
-const fb = require('express').Router();
-const { readFromFile, readAndAppend } = require('../helpers/fsUtils');
+const router = require('express').Router();
+const { readFromFile, readAndAppend, writeToFile} = require('../helpers/fsUtils');
 const { v4: uuidv4 } = require('uuid');
 
 
 
-fb.get('/', (req, res) => {
+router.get('/', (req, res) => {
     console.info(`${req.method} request received for feedback`);
   
     readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
   });
 
 
-  fb.post('/', (req, res) => {
+router.post('/', (req, res) => {
     console.info(`${req.method} request received to submit feedback`)
 //   });
   
@@ -40,4 +40,13 @@ fb.get('/', (req, res) => {
   }
 });
 
-  module.exports = fb;
+router.delete("/:id", (req, res) => {
+  readFromFile('./db/db.json').then((data) => {
+    const notes = JSON.parse(data).filter(note => note.id != req.params.id);
+    writeToFile("./db/db.json", notes);
+    res.json(notes);
+    
+  });
+});
+
+  module.exports = router;

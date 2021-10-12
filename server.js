@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 
-app.use('/api', api);
+app.use('/api/notes', api);
 
 app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, './public/index.html'))
